@@ -8,6 +8,7 @@ from moo_sim_interface.simulation_environment_apis import (
 from moo_sim_interface.simulation_environment_apis.fmu_simulator import (
     run_fmu_simulation,
 )
+from moo_sim_interface.utils.setup_configs import setup_config_dir
 from moo_sim_interface.utils.yaml_config_parser import parse_sim_config_file
 
 
@@ -30,13 +31,23 @@ def sim_env_apis_wrapper(return_results: bool = False, **args) -> Union[None, li
 
 def main():
     parser = argparse.ArgumentParser('run_sim')
-    parser.add_argument('-f',
-                        metavar='config_filename',
+    parser.add_argument('-f', '--file',
                         help='Provide the filename of your .yml simulation configuration file in the "configs" dir '
                              'or an absolute path (optional)',
+                        metavar='',
                         type=str)
+    parser.add_argument('-s', '--setup',
+                        action='store_true',
+                        help='Copy generic config files (e.g., .yml files) to the current working directory.')
+
     launch_args = parser.parse_args()
-    if launch_args.f is not None:
+
+    if launch_args.setup:
+        setup_config_dir()
+        if launch_args.file is None:
+            return
+
+    if launch_args.file is not None:
         sim_args = parse_sim_config_file(launch_args.f)
     else:
         print('No config file provided, using default config file from the current working directory.')

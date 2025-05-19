@@ -14,11 +14,12 @@ install_requires = ['fmpy', 'dask[bag]', 'numpy', 'PyYAML', 'plotly', 'matplotli
 
 extras_require = {
     'develop': ['pytest', 'pytest-cov', 'flake8', 'pre-commit'],
-    'optimization': ['paref', 'pymoo'],
+    'optim': ['paref', 'pymoo'],
     # 'dymola': ['dymola'],
     # 'openmodelica': ['OMPython'],
-
 }
+
+extras_require['all'] = list({dep for deps in extras_require.values() for dep in deps})
 
 setup(name='moo_sim_interface',
       version='0.4.0',
@@ -32,4 +33,8 @@ setup(name='moo_sim_interface',
       packages=find_packages(),
       python_requires='>=3.10',
       install_requires=install_requires,
-      entry_points={'console_scripts': ['run_sim=moo_sim_interface.simulator_api:main']})
+      entry_points={'console_scripts': ['run_sim=moo_sim_interface.simulator_api:main',
+                                        'run_moo=moo_sim_interface.optimizer_api:main']},
+      package_data={
+          '': ['../configs/generic/*.yml']},
+      )
