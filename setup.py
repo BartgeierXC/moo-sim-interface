@@ -17,12 +17,13 @@ extras_require = {
     'optim': ['paref', 'pymoo'],
     # 'dymola': ['dymola'],
     # 'openmodelica': ['OMPython'],
+    # 'matlab': ['matlab.engine'],
 }
 
 extras_require['all'] = list({dep for deps in extras_require.values() for dep in deps})
 
 setup(name='moo_sim_interface',
-      version='0.4.0',
+      version='0.4.1',
       description='A generic interface for Modelica/FMU simulation and optimization',
       long_description=long_description,
       long_description_content_type='text/markdown',

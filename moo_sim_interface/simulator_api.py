@@ -48,7 +48,7 @@ def main():
             return
 
     if launch_args.file is not None:
-        sim_args = parse_sim_config_file(launch_args.f)
+        sim_args = parse_sim_config_file(launch_args.file)
     else:
         print('No config file provided, using default config file from the current working directory.')
         sim_args = parse_sim_config_file()

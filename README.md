@@ -1,6 +1,7 @@
 # moo-sim-interface
 
-moo-sim-interface is a Python package for the simulation of Modelica-based models, either as FMUs [Functional Mock-up Units](https://fmi-standard.org/) or using the OpenModelica or Dymola Python APIs. It allows for easily configurable simulation
+moo-sim-interface is a Python package for the simulation of Matlab or Modelica-based models, either as FMUs
+[Functional Mock-up Units](https://fmi-standard.org/) or using the OpenModelica or Dymola Python APIs. It allows for easily configurable simulation
 setup, execution and evaluation via a generic text-based interface. Its main purpose is parallelization of simulations
 and parameter sweeps. Furthermore, it provides a generic interface for Multi-Objective-Optimization.
 

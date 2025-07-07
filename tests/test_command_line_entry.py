@@ -12,7 +12,6 @@ skip_docker = pytest.mark.skipif(
 @skip_docker
 def test_setup_argument_creates_config_files_in_pwd(tmp_path):
     current_dir = tmp_path
-    # os.chdir(current_dir)
 
     result = subprocess.run(
         ["run_sim", "-s"],

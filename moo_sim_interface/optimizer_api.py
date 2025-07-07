@@ -44,7 +44,7 @@ def main():
             return
 
     if launch_args.file is not None:
-        moo_args = parse_moo_config_file(launch_args.f)
+        moo_args = parse_moo_config_file(launch_args.file)
     else:
         print('No config file provided, using default config file from the current working directory.')
         moo_args = parse_moo_config_file()
