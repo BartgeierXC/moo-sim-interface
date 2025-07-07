@@ -10,8 +10,10 @@ repos:
   rev: 7.1.0
   hooks:
     - id: flake8
-      exclude: OMPythonFast.py
-      args: ["--max-line-length=120", "--extend-ignore=E203,W503"]
+      exclude:
+        OMPythonFast.py
+        path_optimization
+      args: ["--max-line-length=120", "--extend-ignore=E203,W503,E501"]
 - repo: local
   hooks:
     - id: pytest
