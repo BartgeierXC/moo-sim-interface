@@ -32,7 +32,6 @@ jobs:
               chown -R $(id -u):$(id -g) /workspace &&
               su hostuser -c '
                 echo \"installPackage(Modelica, \\\"4.0.0+maint.om\\\"); getErrorString();\" > install.mos &&
-                ls -l /home/hostuser/.openmodelica/libraries/ &&
                 omc install.mos &&
                 python3 -m pip install --upgrade pip &&
                 python3 -m pip install -r requirements.txt &&
@@ -42,4 +41,5 @@ jobs:
                 python3 -m pytest
               '
             " \
+          ls -l /home/hostuser/.openmodelica/libraries/ \
           python3 --version
