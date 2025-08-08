@@ -3,8 +3,8 @@ import shutil
 
 
 def setup_config_dir():
-    package_data_dir = os.path.join(os.path.dirname(__file__), '../../configs/generic')
-    target_dir = os.getcwd()
+    package_data_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'configs', 'generic')
+    target_dir = os.path.join(os.getcwd(), 'configs', 'generic')
 
     if os.path.exists(package_data_dir):
         for file_name in os.listdir(package_data_dir):
