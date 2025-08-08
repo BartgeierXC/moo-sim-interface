@@ -19,6 +19,8 @@ def test_setup_argument_creates_config_files_in_pwd(tmp_path):
         capture_output=True,
         text=True,
     )
+    print(result)
+    print(result.stdout)
 
     assert (current_dir / 'configs' / 'generic' / 'optimization_config.yml').exists()
     assert (current_dir / 'configs' / 'generic' / 'simulation_config.yml').exists()
