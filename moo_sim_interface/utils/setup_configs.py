@@ -6,6 +6,8 @@ def setup_config_dir():
     package_data_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'configs', 'generic')
     target_dir = os.path.join(os.getcwd(), 'configs', 'generic')
 
+    os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+
     if os.path.exists(package_data_dir):
         for file_name in os.listdir(package_data_dir):
             full_file_name = os.path.join(package_data_dir, file_name)
