@@ -31,7 +31,7 @@ jobs:
               useradd -m -u $(id -u) -g $(id -g) hostuser &&
               chown -R $(id -u):$(id -g) /workspace &&
               su hostuser -c '
-                export PATH=$HOME/.local/bin:$PATH &&
+                export PATH=/home/hostuser/.local/bin:$PATH &&
                 echo \"installPackage(Modelica, \\\"4.0.0+maint.om\\\", exactMatch=true); getErrorString();\" > install.mos &&
                 omc install.mos &&
                 python3 -m pip install --upgrade pip &&
@@ -42,4 +42,3 @@ jobs:
                 python3 -m pytest
               '
             " \
-          python3 --version
