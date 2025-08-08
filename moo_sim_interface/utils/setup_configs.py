@@ -6,7 +6,7 @@ def setup_config_dir():
     package_data_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'configs', 'generic')
     target_dir = os.path.join(os.getcwd(), 'configs', 'generic')
 
-    os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+    os.makedirs(target_dir, exist_ok=True)
 
     if os.path.exists(package_data_dir):
         for file_name in os.listdir(package_data_dir):
@@ -14,9 +14,6 @@ def setup_config_dir():
             if os.path.isfile(full_file_name):
                 shutil.copy(full_file_name, target_dir)
                 print(f'Copied {full_file_name} to {target_dir}')
-        # print all files in the target dir:
-        for file_name in os.listdir(target_dir):
-            print(f'File in target directory: {file_name}')
         print(f'Configuration files copied to {target_dir}')
     else:
         print(f'Package data directory not found: {package_data_dir}')
