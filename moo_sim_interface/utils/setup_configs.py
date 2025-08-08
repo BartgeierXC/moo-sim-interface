@@ -11,6 +11,10 @@ def setup_config_dir():
             full_file_name = os.path.join(package_data_dir, file_name)
             if os.path.isfile(full_file_name):
                 shutil.copy(full_file_name, target_dir)
+                print(f'Copied {full_file_name} to {target_dir}')
+        # print all files in the target dir:
+        for file_name in os.listdir(target_dir):
+            print(f'File in target directory: {file_name}')
         print(f'Configuration files copied to {target_dir}')
     else:
         print(f'Package data directory not found: {package_data_dir}')
