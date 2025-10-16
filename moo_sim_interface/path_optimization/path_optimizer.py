@@ -436,4 +436,5 @@ if __name__ == '__main__':
 
     # additional data exploration and visualization methods, to help with the understanding of the data:
     # poi_selector_plot(load_data(experiment4.get('choice')))
+    # search_for_start_candidates(load_data(experiment4.get('choice')), obj_2_threshold=10, print_candidates_thresh=1000)
     # poi_selector_show_increments(load_data(experiment2.get('choice')), start_idx=8, calc_unions=True)

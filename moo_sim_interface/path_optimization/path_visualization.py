@@ -312,6 +312,24 @@ def poi_selector_plot(args, *, color_sequence=None, index=None, start_index=None
     fig.show()
 
 
+def search_for_start_candidates(args, *, obj_2_threshold=None, print_candidates_thresh=5000):
+    data, d, t, _ = args
+    design_names = data.columns[:d]
+    design_data = data[design_names]
+
+    design_array = design_data.to_numpy()
+    # take the points where obj_2 is larger then 25:
+    start_selection = design_data[data['Residual_demand'] > obj_2_threshold] if obj_2_threshold is not None else design_data
+    start_selection = start_selection.to_numpy()
+    # iterate over these points and count, how many points are larger in every dimension:
+    for idx, row in enumerate(start_selection):
+        mask = (design_array > row).all(axis=1)
+        num_larger_points = np.sum(mask)
+        if num_larger_points > print_candidates_thresh:
+            print(f'Point {idx} has {num_larger_points} larger points')
+            print(f'Index in full data: {design_data.index[np.all(design_data == row, axis=1)]}')
+
+
 def poi_selector_show_increments(args, *, start_idx, calc_unions=False):
     data, d, t, _ = args
     design_names = data.columns[:d]
