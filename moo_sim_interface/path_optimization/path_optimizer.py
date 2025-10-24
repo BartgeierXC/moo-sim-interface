@@ -362,6 +362,44 @@ def load_data(choice):
         d_units = ['W', 'W', 'J', 'J', 'W']
         REF_POINT = [1e8, 1]
         return raw_data, 5, 2, d_units
+    elif choice == 'western_cape_bess_npy':
+        raw_np_data = np.load('resources/bbf_8_weights_bess_1h_median_100000.npy')
+        # multiply the values from scale with weights:
+        num_weight = 8
+        n_design_dimensions = num_weight + 1
+        raw_np_data[:, 0:num_weight] = raw_np_data[:, 0:num_weight] * raw_np_data[:, num_weight:n_design_dimensions]
+        # drop column 11:
+        raw_np_data = np.delete(raw_np_data, n_design_dimensions-1, axis=1)
+        # switch the last two columns:
+        raw_np_data[:, -2], raw_np_data[:, -1] = raw_np_data[:, -1], raw_np_data[:, -2].copy()
+
+        raw_data = pd.DataFrame(raw_np_data,
+                                columns=[f'weight_{i + 1}' for i in range(num_weight)] +
+                                        ['bess', 'Median Maximum Daily Ramp', 'Residual Demand'])
+
+        # load and append additional data:
+        additional_data = np.load('resources/bbf_10k_additional_8w_data.npy')
+        additional_data[:, 0:num_weight] = additional_data[:, 0:num_weight] * additional_data[:, num_weight:n_design_dimensions]
+        additional_data = np.delete(additional_data, n_design_dimensions-1, axis=1)
+        # append to dataframe:
+        raw_data = pd.concat([raw_data, pd.DataFrame(additional_data, columns=raw_data.columns)], axis=0, ignore_index=True)
+
+        d_units = ['MW'] * num_weight + ['MWh']
+        REF_POINT = [30, 30]
+        return raw_data, n_design_dimensions, 2, d_units
+    elif choice == 'western_cape_bess_csv':
+        raw_pd_data = pd.read_csv('resources/bbf_7_weights_bess_1h_median_100000.csv')
+        # multiply the values from scale with weights:
+        num_weight = 7
+        n_design_dimensions = num_weight + 1
+        # do the data multiplication for the dataframe:
+        raw_pd_data.iloc[:, 0:num_weight] = raw_pd_data.iloc[:, 0:num_weight].values * raw_pd_data.iloc[:, num_weight].values[
+            :, np.newaxis]
+        # drop column scale:
+        raw_pd_data.drop(columns=['RE_scale'], inplace=True)
+        d_units = ['MW'] * num_weight + ['MWh']
+        REF_POINT = [30, 30]
+        return raw_pd_data, n_design_dimensions, 2, d_units
     else:
         raise ValueError('Invalid choice')
 
