@@ -78,35 +78,21 @@ def create_3d_plot(data, start, end, d_design, d_target, d_units):
     plt.show()
 
 
-def plot_pareto_optimal_paths(data, optimal_paths, extra_plot_items_thresh, design_names, target_names, **kwargs):
-    raw_data_df = data
+def plot_pareto_optimal_paths(data, full_data, optimal_paths, extra_plot_items_thresh, design_names, target_names, **kwargs):
+    filtered_data_df = data
 
-    all_points = raw_data_df[target_names].to_numpy()
+    filtered_points = filtered_data_df[target_names].to_numpy()
+    all_points = full_data[target_names].to_numpy()
 
     pareto_points, non_pareto_points = calculate_pareto_points(all_points)
 
-    # Determine which points are Pareto optimal
-    is_pareto_optimal = np.isin(all_points, pareto_points).all(axis=1)
-
     # Create the figure and subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 9), dpi=256)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 9), dpi=512)
 
     # Plot the Target space and overlay the paths
-    pareto_colors = raw_data_df[design_names[-1]][is_pareto_optimal]
-    non_pareto_colors = raw_data_df[design_names[-1]][~is_pareto_optimal]
-    ax1.scatter(pareto_points[:, 0], pareto_points[:, 1], c=pareto_colors, cmap='viridis', marker='^',
-                label='Pareto points')
-    if len(non_pareto_points) > 0:
-        ax1.scatter(non_pareto_points[:, 0], non_pareto_points[:, 1], s=5, c=non_pareto_colors, cmap='viridis',
-                    label='Non-Pareto points')
-
-    # calculate the pareto paths:
-    # path_data = np.array([[x[1] for x in optimal_paths], [x[2] for x in optimal_paths]]).T
-    # pareto_paths_t, non_pareto_paths = calculate_pareto_points(path_data)
-
-    # select the pareto optimal paths from the optimal paths
-    # is_pareto_path = np.isin(path_data, pareto_paths_t).all(axis=1)
-    # pareto_paths = [optimal_paths[i] for i in range(len(optimal_paths)) if is_pareto_path[i]]
+    ax1.scatter(pareto_points[:, 0], pareto_points[:, 1], c='blue', marker='^', label='Pareto points')
+    if len(filtered_points) > 0:
+        ax1.scatter(filtered_points[:, 0], filtered_points[:, 1], s=5, c='orange', label='Nodes of the graph')
 
     cmap = matplotlib.colormaps['plasma']
     colors = cmap(np.linspace(0, 1, len(optimal_paths)))

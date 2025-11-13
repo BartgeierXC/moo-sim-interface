@@ -308,7 +308,7 @@ def experiment_wrapper(choice, start_node, end_node, target_length, data_limit=N
             print(f'Path: {idx}, Delta-HV: {path[1]}, Path: {path[0]}')
 
     if plot_pareto_paths:
-        plot_pareto_optimal_paths(data, moo_paths, extra_plot_items_thresh, design_names, target_names,
+        plot_pareto_optimal_paths(data, raw_data, moo_paths, extra_plot_items_thresh, design_names, target_names,
                                   hv=f'{HYPERVOLUME:.6f}', ref_point=str(REF_POINT), target_len=str(target_length))
 
     if re_transform_into_design_space:
