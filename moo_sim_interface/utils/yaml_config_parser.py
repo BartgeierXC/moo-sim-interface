@@ -143,7 +143,7 @@ def merge_dicts(config: dict, injection: dict):
                 config[key] = value
 
 
-def _parse_config_file(config_file_path: str, overwrite_config: list[dict] = None) -> dict:
+def _parse_config_file(config_file_path: str) -> dict:
     config_file = pathlib.Path(config_file_path)
     if not config_file.is_absolute():
         config_file = pathlib.Path(os.getcwd()) / 'configs' / config_file_path
@@ -152,15 +152,18 @@ def _parse_config_file(config_file_path: str, overwrite_config: list[dict] = Non
         # use a custom yaml loader, that parses "x:y:z" as start:step:stop range instead of the default day:hour:minute
         config = yaml.load(file, Loader=CustomSafeLoader)
 
-        if overwrite_config is not None:
-            for injection in overwrite_config:
-                merge_dicts(config, injection)
         return config
 
 
 def parse_sim_config_file(config_file_path: str = 'generic/simulation_config.yml',
                           overwrite_config: list[dict] = None) -> dict:
-    simulation_config = _parse_config_file(config_file_path, overwrite_config)
+
+    simulation_config = _parse_config_file(config_file_path)
+
+    if overwrite_config is not None:
+        validate_simulation_configuration(simulation_config)
+        for injection in overwrite_config:
+            merge_dicts(simulation_config, injection)
 
     if validate_simulation_configuration(simulation_config):
         return simulation_config
@@ -170,7 +173,12 @@ def parse_sim_config_file(config_file_path: str = 'generic/simulation_config.yml
 
 def parse_moo_config_file(config_file_path: str = 'generic/optimization_config.yml',
                           overwrite_config: list[dict] = None) -> dict:
-    optimization_config = _parse_config_file(config_file_path, overwrite_config)
+    optimization_config = _parse_config_file(config_file_path)
+
+    if overwrite_config is not None:
+        validate_simulation_configuration(simulation_config)
+        for injection in overwrite_config:
+            merge_dicts(config, injection)
 
     if validate_optimization_configuration(optimization_config):
         return optimization_config

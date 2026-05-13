@@ -122,6 +122,10 @@ def check_simulation_setup(simulation_setup: dict):
     if (not isinstance(simulation_setup.get('num_of_steps'), numbers.Real) or
             simulation_setup.get('num_of_steps') == 0.0):
         simulation_setup['num_of_steps'] = None
+    if (not isinstance(simulation_setup.get('start_time'), numbers.Number)):
+        simulation_setup['start_time'] = 0
+    if (not isinstance(simulation_setup.get('stop_time'), numbers.Number)):
+        simulation_setup['stop_time'] = None
 
     if (simulation_setup.get('step_size') is not None and simulation_setup.get('num_of_steps') is not None or
             (simulation_setup.get('step_size') is None and simulation_setup.get('num_of_steps') is None)):
