@@ -70,6 +70,9 @@ class ModelicaSystemFast(ModelicaSystem):
             else:
                 return None
 
+    def _raise_error(self, errstr):
+        print(errstr)
+
     def setTempDirectory(self, customBuildDirectory):
         if customBuildDirectory is not None:
             os.makedirs(customBuildDirectory, exist_ok=True)
