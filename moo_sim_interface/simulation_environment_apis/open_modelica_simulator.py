@@ -1,6 +1,9 @@
 import multiprocessing
 import os
+import platform
 import shutil
+import subprocess
+import sys
 from importlib.metadata import version
 from importlib.util import find_spec
 from math import ceil
@@ -12,6 +15,52 @@ from moo_sim_interface.utils.batched_iterator import BatchedIterator
 from moo_sim_interface.utils.dependency_installer import install_openmodelica_package
 from moo_sim_interface.utils.post_simulation_data_processor import PostSimulationDataProcessor
 from moo_sim_interface.utils.yaml_config_parser import prepare_simulation_environment
+
+
+def _fallback_mingw_build(build_dir: str, model_name: str, timeout: int = 300) -> bool:
+    """Fallback: call mingw32-make manually if OMC's internal build timed out.
+
+    Returns True if the executable was successfully built, False otherwise.
+    """
+    exe_name = f'{model_name}.exe' if platform.system() == 'Windows' else model_name
+    exe_path = os.path.join(build_dir, exe_name)
+    if os.path.exists(exe_path):
+        return True  # already built
+
+    makefile = os.path.join(build_dir, f'{model_name}.makefile')
+    if not os.path.exists(makefile):
+        print(f'[fallback build] Makefile not found: {makefile}')
+        return False
+
+    omhome = os.environ.get('OPENMODELICAHOME', '')
+    env = os.environ.copy()
+    if omhome and platform.system() == 'Windows':
+        env['PATH'] = os.path.join(omhome, 'bin') + os.pathsep + env.get('PATH', '')
+
+    make_cmd = 'mingw32-make' if platform.system() == 'Windows' else 'make'
+    print(f'[fallback build] OMC build timed out – calling {make_cmd} manually for {model_name} ...')
+    try:
+        result = subprocess.run(
+            [make_cmd, '-f', makefile],
+            cwd=build_dir,
+            env=env,
+            timeout=timeout,
+        )
+        if result.returncode == 0 and os.path.exists(exe_path):
+            print(f'[fallback build] Successfully built {exe_name}')
+            return True
+        else:
+            print(f'[fallback build] Build failed (exit {result.returncode})')
+            return False
+    except subprocess.TimeoutExpired:
+        print(f'[fallback build] Build exceeded {timeout}s timeout')
+        return False
+    except FileNotFoundError:
+        print(f'[fallback build] {make_cmd} not found in PATH')
+        return False
+    except Exception as exc:
+        print(f'[fallback build] Unexpected error: {exc}')
+        return False
 
 
 def run_simulation(return_results: bool = False, **args) -> Union[None, list]:
